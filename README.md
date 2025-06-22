@@ -4,7 +4,7 @@ A comprehensive interactive guide documenting 10 common network problems across 
 
 ## 🌐 Live Demo
 
-[View Live Demo]()
+[View Live Demo](https://networks-problems-project.vercel.app/)
 
 ## 📋 Overview
 
@@ -52,19 +52,11 @@ networks-problems-project/
 └── README.md              # Project documentation
 ```
 
-## 🚀 Deployment
-
-### Vercel Deployment
-
-1. Fork or clone this repository
-2. Connect your GitHub repository to Vercel
-3. Deploy with default settings (static site)
-
-### Local Development
+## Deployment
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/networks-problems-project.git
+git clone https://github.com/katex35/networks-problems-project.git
 ```
 
 2. Open `index.html` in your browser or serve with a local server:
