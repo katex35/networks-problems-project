@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Final Design Project - Admin Guide</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --bg-color: #ffffff;
+            --card-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 80px;
+            bottom: 0;
+            width: 300px;
+            background: var(--card-color);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .nav-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+            border-left-color: var(--secondary-color);
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 300px;
+            margin-top: 80px;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: sticky;
+            top: 80px;
+            z-index: 99;
+            background: var(--bg-color);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Problem Cards */
+        .problem {
+            background: var(--card-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .problem:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .problem-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .problem-number {
+            background: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .problem-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .layer-badge {
+            background: var(--warning-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: auto;
+        }
+
+        .problem-description {
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .image-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .image-item:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .image-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+                 .image-item:hover .image-overlay {
+             transform: translateY(0);
+         }
+
+         /* Video Item */
+         .video-item {
+             position: relative;
+             border-radius: 12px;
+             overflow: hidden;
+             box-shadow: var(--shadow);
+             transition: all 0.3s ease;
+             cursor: pointer;
+             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             min-height: 200px;
+         }
+
+         .video-item:hover {
+             transform: scale(1.02);
+             box-shadow: var(--shadow-lg);
+         }
+
+         .video-placeholder {
+             color: white;
+             text-align: center;
+             padding: 2rem;
+         }
+
+         .video-placeholder i {
+             font-size: 3rem;
+             margin-bottom: 1rem;
+             display: block;
+         }
+
+         .video-placeholder h4 {
+             margin: 0;
+             font-weight: 600;
+         }
+
+         .video-item .image-overlay {
+             position: absolute;
+             bottom: 0;
+             left: 0;
+             right: 0;
+             background: linear-gradient(transparent, rgba(0,0,0,0.8));
+             color: white;
+             padding: 1rem;
+             transform: translateY(100%);
+             transition: all 0.3s ease;
+         }
+
+         .video-item:hover .image-overlay {
+             transform: translateY(0);
+         }
+
+        /* Solution Box */
+        .solution {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+        }
+
+        .solution-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .solution-title i {
+            margin-right: 0.5rem;
+        }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .download-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .download-link i {
+            margin-right: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+                 .modal-content {
+             position: relative;
+             max-width: 85vw;
+             max-height: 85vh;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             animation: modalSlideIn 0.3s ease;
+         }
+
+         .modal-content img {
+             max-width: 100%;
+             max-height: 85%;
+             width: auto;
+             height: auto;
+             object-fit: contain;
+             border-radius: 8px;
+             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+         }
+
+         .modal-caption {
+             position: absolute;
+             bottom: 20px;
+             left: 50%;
+             transform: translateX(-50%);
+             background: rgba(0, 0, 0, 0.8);
+             color: white;
+             padding: 12px 20px;
+             border-radius: 25px;
+             max-width: 80%;
+             text-align: center;
+             font-size: 0.9rem;
+             line-height: 1.4;
+             backdrop-filter: blur(10px);
+             border: 1px solid rgba(255, 255, 255, 0.1);
+             opacity: 0;
+             transition: opacity 0.3s ease;
+         }
+
+         .modal.active .modal-caption {
+             opacity: 1;
+         }
+
+         .modal-caption i {
+             margin-right: 8px;
+             color: var(--primary-color);
+         }
+
+         .modal-counter {
+             position: absolute;
+             top: 20px;
+             left: 50%;
+             transform: translateX(-50%);
+             background: rgba(0, 0, 0, 0.8);
+             color: white;
+             padding: 8px 16px;
+             border-radius: 20px;
+             font-size: 0.85rem;
+             font-weight: 500;
+             backdrop-filter: blur(10px);
+             border: 1px solid rgba(255, 255, 255, 0.1);
+             z-index: 2002;
+         }
+
+         .modal-zoom-controls {
+             position: absolute;
+             top: 20px;
+             right: 20px;
+             display: flex;
+             align-items: center;
+             gap: 8px;
+             background: rgba(0, 0, 0, 0.8);
+             padding: 8px 12px;
+             border-radius: 20px;
+             backdrop-filter: blur(10px);
+             border: 1px solid rgba(255, 255, 255, 0.1);
+             z-index: 2002;
+         }
+
+         .zoom-btn {
+             background: none;
+             border: none;
+             color: white;
+             width: 32px;
+             height: 32px;
+             border-radius: 50%;
+             cursor: pointer;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             transition: all 0.3s ease;
+             font-size: 0.9rem;
+         }
+
+         .zoom-btn:hover {
+             background: rgba(255, 255, 255, 0.2);
+             transform: scale(1.1);
+         }
+
+         .zoom-level {
+             color: white;
+             font-size: 0.8rem;
+             font-weight: 500;
+             min-width: 40px;
+             text-align: center;
+         }
+
+         .modal-image-container {
+             width: 100%;
+             height: 100%;
+             overflow: hidden;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             cursor: grab;
+         }
+
+         .modal-image-container:active {
+             cursor: grabbing;
+         }
+
+         .modal-image-container img {
+             transition: transform 0.3s ease;
+             user-select: none;
+             pointer-events: none;
+         }
+
+         /* Placeholder Message */
+         .placeholder-message {
+             border: 2px dashed var(--border-color);
+             transition: all 0.3s ease;
+         }
+
+         body.dark .placeholder-message {
+             background: var(--dark-card) !important;
+             color: var(--dark-text) !important;
+         }
+
+         .placeholder-message:hover {
+             border-color: var(--primary-color);
+             transform: translateY(-2px);
+         }
+
+                 .modal-close {
+             position: fixed;
+             top: 20px;
+             right: 20px;
+             background: rgba(255, 255, 255, 0.9);
+             color: black;
+             border: none;
+             width: 45px;
+             height: 45px;
+             border-radius: 50%;
+             cursor: pointer;
+             font-size: 1.3rem;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             transition: all 0.3s ease;
+             z-index: 2001;
+         }
+
+         .modal-close:hover {
+             background: white;
+             transform: scale(1.1);
+         }
+
+         .modal-nav {
+             position: fixed;
+             top: 50%;
+             transform: translateY(-50%);
+             background: rgba(255, 255, 255, 0.9);
+             color: black;
+             border: none;
+             width: 55px;
+             height: 55px;
+             border-radius: 50%;
+             cursor: pointer;
+             font-size: 1.6rem;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             transition: all 0.3s ease;
+             z-index: 2001;
+         }
+
+         .modal-nav:hover {
+             background: white;
+             transform: translateY(-50%) scale(1.1);
+         }
+
+         .modal-nav.prev {
+             left: 20px;
+         }
+
+         .modal-nav.next {
+             right: 20px;
+         }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .nav {
+                transform: translateX(-100%);
+            }
+
+            .nav.active {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+
+                 @media (max-width: 640px) {
+             .header-content {
+                 padding: 0 1rem;
+             }
+
+             .main {
+                 padding: 1rem;
+             }
+
+             .hero {
+                 padding: 2rem 1rem;
+             }
+
+             .hero h1 {
+                 font-size: 1.5rem;
+             }
+
+             .problem {
+                 padding: 1.5rem;
+             }
+
+             .image-gallery {
+                 grid-template-columns: 1fr;
+             }
+
+             /* Modal responsive */
+             .modal-content {
+                 max-width: 95vw;
+                 max-height: 90vh;
+             }
+
+             .modal-close {
+                 top: 10px;
+                 right: 10px;
+                 width: 40px;
+                 height: 40px;
+             }
+
+             .modal-nav {
+                 width: 45px;
+                 height: 45px;
+                 font-size: 1.4rem;
+             }
+
+             .modal-nav.prev {
+                 left: 10px;
+             }
+
+             .modal-nav.next {
+                 right: 10px;
+             }
+
+             .modal-caption {
+                 bottom: 10px;
+                 padding: 8px 16px;
+                 font-size: 0.8rem;
+                 max-width: 90%;
+             }
+
+             .modal-counter {
+                 top: 10px;
+                 padding: 6px 12px;
+                 font-size: 0.75rem;
+             }
+
+             .modal-zoom-controls {
+                 top: 10px;
+                 right: 10px;
+                 padding: 6px 8px;
+                 gap: 6px;
+             }
+
+             .zoom-btn {
+                 width: 28px;
+                 height: 28px;
+                 font-size: 0.8rem;
+             }
+
+             .zoom-level {
+                 font-size: 0.7rem;
+                 min-width: 35px;
+             }
+         }
+    </style>
+</head>
+<body>
+
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <i class="fas fa-network-wired"></i>
+                Network Admin Guide
+            </a>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-title">
+            <i class="fas fa-list"></i>
+            Network Problems
+        </div>
+        <a href="#problem-1" class="nav-item active" data-problem="1">
+            <i class="fas fa-exclamation-triangle"></i>
+            IP Conflict
+        </a>
+        <a href="#problem-2" class="nav-item" data-problem="2">
+            <i class="fas fa-ethernet"></i>
+            MAC Address Conflict
+        </a>
+        <a href="#problem-3" class="nav-item" data-problem="3">
+            <i class="fas fa-project-diagram"></i>
+            VLAN Misconfiguration
+        </a>
+                 <a href="#problem-4" class="nav-item" data-problem="4">
+             <i class="fas fa-unlink"></i>
+             Cable Fault
+         </a>
+         <a href="#problem-5" class="nav-item" data-problem="5">
+             <i class="fas fa-route"></i>
+             Default Gateway Missing
+         </a>
+         <a href="#problem-6" class="nav-item" data-problem="6">
+             <i class="fas fa-globe"></i>
+             DNS Server Unreachable
+         </a>
+         <a href="#problem-7" class="nav-item" data-problem="7">
+             <i class="fas fa-exchange-alt"></i>
+             IP Routing Missing
+         </a>
+         <a href="#problem-8" class="nav-item" data-problem="8">
+             <i class="fas fa-server"></i>
+             DHCP Gateway Misconfiguration
+         </a>
+         <a href="#problem-9" class="nav-item" data-problem="9">
+             <i class="fas fa-sync-alt"></i>
+             Switching Loop (STP Disabled)
+         </a>
+         <a href="#problem-10" class="nav-item" data-problem="10">
+             <i class="fas fa-compress-arrows-alt"></i>
+             MTU Mismatch
+         </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero fade-in">
+                                 <h1>
+                     <i class="fas fa-shield-alt"></i>
+                     Network Admin Guide Tutorial
+                 </h1>
+    <p>This document includes network issues across OSI Layers (L1–L7) with explanations and solutions supported by simulations.</p>
+            </section>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Problem 1: IP Conflict -->
+            <section id="problem-1" class="problem fade-in">
+                <div class="problem-header">
+                    <div class="problem-number">1</div>
+                    <h2 class="problem-title">IP Conflict (IP Collision)</h2>
+                    <span class="layer-badge">Network Layer (L3)</span>
+                </div>
+                
+                <div class="problem-description">
+                    <strong>Problem Definition:</strong> Two devices on the network (for example, two PCs) are mistakenly configured with the same IP address (for example, 192.168.1.10). In this case, the devices conflict on the network and cannot communicate.
+                </div>
+
+                <div style="background: rgba(var(--warning-color-rgb, 245, 158, 11), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--warning-color);"><i class="fas fa-exclamation-triangle"></i> Symptoms:</h4>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                        <li>In some cases, "Duplicate IP Address Detected" warning may be visible</li>
+                        <li>Network connection is lost or becomes unstable</li>
+                    </ul>
+                </div>
+
+                <div class="image-gallery">
+                    <div class="image-item" onclick="openModal('images/problem_1/problem_1_pc0_ip_configuration.png')">
+                        <img src="images/problem_1/problem_1_pc0_ip_configuration.png" alt="PC0 IP Configuration">
+                        <div class="image-overlay">
+                            <h4>PC0: IP configuration setup</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_1/problem_1_pc1_ip_config_same_ip_thats_why_error.png')">
+                        <img src="images/problem_1/problem_1_pc1_ip_config_same_ip_thats_why_error.png" alt="PC1 Same IP - Conflict">
+                        <div class="image-overlay">
+                            <h4>PC1: Same IP address causing conflict</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_1/problem_1_pc1_different_ip_address.png')">
+                        <img src="images/problem_1/problem_1_pc1_different_ip_address.png" alt="PC1 Different IP - Fixed">
+                        <div class="image-overlay">
+                            <h4>PC1: Different IP address assigned</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_1/problem_1_pc1_ping_pc0_succesful.png')">
+                        <img src="images/problem_1/problem_1_pc1_ping_pc0_succesful.png" alt="Ping Successful">
+                        <div class="image-overlay">
+                            <h4>Success: PC1 to PC0 ping successful after IP change</h4>
+                        </div>
+                    </div>
+                </div>
+
+    <div class="solution">
+                    <div class="solution-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Solution
+    </div>
+
+                    <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        
+                        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            <li>Assign a unique IP address to each device</li>
+                            <li>IP addresses should be distributed in a planned manner or assigned automatically using DHCP</li>
+                            <li>Verify that each device has a different IP address in the same subnet</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Result:</strong> IP conflicts are Layer 3 (Network Layer) problems that prevent proper routing and communication between devices. With unique IP assignment, network communication is restored and devices can communicate successfully.</p>
+                    
+                    <a href="cisco/problem_1_same_ip.pkt" class="download-link" download>
+                        <i class="fas fa-download"></i>
+                        Download Simulation
+                    </a>
+                </div>
+            </section>
+
+            <!-- Problem 2: MAC Address Conflict -->
+            <section id="problem-2" class="problem fade-in">
+                <div class="problem-header">
+                    <div class="problem-number">2</div>
+                    <h2 class="problem-title">MAC Address Conflict (MAC Address Collision)</h2>
+                    <span class="layer-badge">Data Link Layer (L2)</span>
+                </div>
+                
+                <div class="problem-description">
+                    <strong>Problem Definition:</strong> Two computers in the network (for example PC0 and PC1) are mistakenly configured with the same MAC address. The switch learns MAC addresses according to ports, but when the same MAC address comes from multiple ports, routing instability occurs. This situation leads to packet loss, ping failures, and general network instability.
+                </div>
+
+                <div style="background: rgba(var(--warning-color-rgb, 245, 158, 11), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--warning-color);"><i class="fas fa-exclamation-triangle"></i> Symptoms:</h4>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                        <li>Ping command yields no results (Request timed out)</li>
+                        <li>Network performance decreases</li>
+                        <li>ARP tables get confused</li>
+                    </ul>
+                </div>
+
+                <div class="image-gallery">
+                    <div class="image-item" onclick="openModal('images/problem_2/problem_2_pc0_ip_config.png')">
+                        <img src="images/problem_2/problem_2_pc0_ip_config.png" alt="PC0 IP Configuration">
+                        <div class="image-overlay">
+                            <h4>PC0: IP configuration (192.168.1.1)</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_2/problem_2_pc1_ip_config.png')">
+                        <img src="images/problem_2/problem_2_pc1_ip_config.png" alt="PC1 IP Configuration">
+                        <div class="image-overlay">
+                            <h4>PC1: IP configuration (192.168.1.2)</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_2/problem_2_pc0_mac_address_writed_to_pc1_to_show_the_problem.png')">
+                        <img src="images/problem_2/problem_2_pc0_mac_address_writed_to_pc1_to_show_the_problem.png" alt="Same MAC Address Problem">
+                        <div class="image-overlay">
+                            <h4>PC0's MAC address copied to PC1 (Problem created)</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_2/problem_2_ping_pc0_from_pic1_request_timed_out.png')">
+                        <img src="images/problem_2/problem_2_ping_pc0_from_pic1_request_timed_out.png" alt="Ping Failed">
+                        <div class="image-overlay">
+                            <h4>Ping from PC1 to PC0: Request timed out</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_2/problem_2_pc1_mac_adrees_fixed.png')">
+                        <img src="images/problem_2/problem_2_pc1_mac_adrees_fixed.png" alt="MAC Address Fixed">
+                        <div class="image-overlay">
+                            <h4>PC1: MAC address changed to unique value</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_2/problem_2_ping_suceecsful_after_fixing_mac_adress.png')">
+                        <img src="images/problem_2/problem_2_ping_suceecsful_after_fixing_mac_adress.png" alt="Ping Successful">
+                        <div class="image-overlay">
+                            <h4>Success: Ping successful after MAC address fix</h4>
+                        </div>
+                    </div>
+                </div>
+
+    <div class="solution">
+                    <div class="solution-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Solution
+    </div>
+
+                    <p>Each device must have a unique MAC address.</p>
+
+                    <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-bottom: 0.5rem;">Solution Steps:</h4>
+                        <ol style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            <li>Go to PC1 → <code style="background: var(--dark-bg); color: #00ff00; padding: 0.2rem; border-radius: 4px;">Config > FastEthernet</code></li>
+                            <li>Change the MAC address (for example, enter a different value like 00D0.BA1D.1C02)</li>
+                            <li>Repeat the ping test</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-bottom: 0.5rem;">Result:</h4>
+                        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            <li>Ping becomes successful</li>
+                            <li>Switch MAC table works properly</li>
+                            <li>Network instability is eliminated</li>
+                        </ul>
+                    </div>
+
+                    <p><strong>Technical Note:</strong> This is a Layer 2 (Data Link Layer) problem. MAC addresses are used for frame switching within the local network, and conflicts prevent proper frame delivery.</p>
+                    
+                                         <a href="cisco/problem_2_mac.pkt" class="download-link" download>
+                        <i class="fas fa-download"></i>
+                        Download Simulation
+                    </a>
+                </div>
+            </section>
+
+            <!-- Problem 3: VLAN Misconfiguration -->
+            <section id="problem-3" class="problem fade-in">
+                <div class="problem-header">
+                    <div class="problem-number">3</div>
+                    <h2 class="problem-title">VLAN Misconfiguration (VLAN Wrong Configuration)</h2>
+                    <span class="layer-badge">Data Link Layer (L2)</span>
+                </div>
+                
+                <div class="problem-description">
+                    <strong>Problem Definition:</strong> Two devices in the network (for example, computers belonging to different departments) should be assigned to different VLANs, but are mistakenly configured in the same VLAN. Since these devices have different IP subnets, communication fails when they try to communicate within the same VLAN.
+                </div>
+
+
+
+                <div class="image-gallery">
+                    <div class="image-item" onclick="openModal('images/problem_3/problem_3_pc0_ip.png')">
+                        <img src="images/problem_3/problem_3_pc0_ip.png" alt="PC0 IP Configuration">
+                        <div class="image-overlay">
+                            <h4>PC0: IP configuration (192.168.10.10)</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_3/problem_3_pc1_ip.png')">
+                        <img src="images/problem_3/problem_3_pc1_ip.png" alt="PC1 IP Configuration">
+                        <div class="image-overlay">
+                            <h4>PC1: IP configuration (192.168.20.10)</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_3/problem_3_request_timed_out.png')">
+                        <img src="images/problem_3/problem_3_request_timed_out.png" alt="VLAN Misconfiguration - Failed">
+                        <div class="image-overlay">
+                            <h4>Ping failed due to VLAN misconfiguration</h4>
+                        </div>
+                    </div>
+                    <div class="image-item" onclick="openModal('images/problem_3/problem_3_swtich_cli_commands.png')">
+                        <img src="images/problem_3/problem_3_swtich_cli_commands.png" alt="VLAN Configuration - CLI Commands">
+                        <div class="image-overlay">
+                            <h4>Switch CLI: VLAN configuration commands</h4>
+                        </div>
+                    </div>
+                </div>
+
+    <div class="solution">
+                    <div class="solution-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Solution
+    </div>
+
+                    <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-bottom: 0.5rem;">🔧 Step 1: Create Correct VLANs</h4>
+                        <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block; margin: 0.5rem 0;">
+                            Switch(config)# vlan 10<br>
+                            Switch(config)# vlan 20
+                        </code>
+                    </div>
+
+                    <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-bottom: 0.5rem;">🔧 Step 2: Assign Ports to Appropriate VLANs</h4>
+                        <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block; margin: 0.5rem 0;">
+                            Switch(config)# interface fa0/1<br>
+                            Switch(config-if)# switchport mode access<br>
+                            Switch(config-if)# switchport access vlan 10<br><br>
+                            Switch(config)# interface fa0/2<br>
+                            Switch(config-if)# switchport mode access<br>
+                            Switch(config-if)# switchport access vlan 20
+                        </code>
+                    </div>
+
+                    <div style="background: rgba(var(--primary-color-rgb, 37, 99, 235), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-bottom: 0.5rem;">🔧 Step 3: Add Routing If Needed</h4>
+                        <p>If communication between VLAN 10 and VLAN 20 is desired, Router-on-a-Stick or Layer 3 Switch routing configuration is required.</p>
+                    </div>
+
+                    <p><strong>Result:</strong> The main cause of this problem is incorrect configuration of logical separation (VLAN/subnet) despite correct physical connections. Although this problem appears at Layer 2 level, it also has Layer 3 effects. With proper VLAN assignment, network segmentation is achieved and communication is re-established.</p>
+                    
+                    <a href="cisco/problem_3_vlan.pkt" class="download-link" download>
+                        <i class="fas fa-download"></i>
+                        Download Simulation
+                    </a>
+                </div>
+            </section>
+
+            <!-- Problem 4: Cable Fault -->
+            <section id="problem-4" class="problem fade-in">
+                <div class="problem-header">
+                    <div class="problem-number">4</div>
+                    <h2 class="problem-title">Cable Fault</h2>
+                    <span class="layer-badge">Physical Layer (L1)</span>
+                </div>
+                
+                                 <div class="problem-description">
+                     <strong>Description:</strong> A physical cable was disconnected between PC and switch, causing 100% packet loss.
+                 </div>
+
+                                 <div class="image-gallery">
+                     <div class="image-item" onclick="openModal('images/problem_4/problem_4_request_failed.png')">
+                         <img src="images/problem_4/problem_4_request_failed.png" alt="Cable Fault - Disconnected">
+                         <div class="image-overlay">
+                             <h4>Cable disconnected: Ping fails</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_4/problem_4_succesful_request.png')">
+                         <img src="images/problem_4/problem_4_succesful_request.png" alt="Cable Fault - Fixed">
+                         <div class="image-overlay">
+                             <h4>Cable reconnected: Ping succeeds</h4>
+                         </div>
+                     </div>
+                 </div>
+
+    <div class="solution">
+                                         <div class="solution-title">
+                         <i class="fas fa-lightbulb"></i>
+                         Solution
+    </div>
+                     <p>Diagnose the physical connection and restore the faulty cable. Use cable testers to verify cable integrity. Check link lights to confirm connection status.</p>
+                     <a href="cisco/problem_4_cable.pkt" class="download-link" download>
+                         <i class="fas fa-download"></i>
+                         Download Simulation
+                     </a>
+                                 </div>
+             </section>
+
+             <!-- Problem 5: Default Gateway Missing -->
+             <section id="problem-5" class="problem fade-in">
+                 <div class="problem-header">
+                     <div class="problem-number">5</div>
+                     <h2 class="problem-title">Default Gateway Missing</h2>
+                     <span class="layer-badge">Network Layer (L3)</span>
+                 </div>
+                 
+                 <div class="problem-description">
+                     <strong>Description:</strong> Even though the computer (PC) is configured with the correct IP address and subnet mask, if the default gateway information is not entered, it cannot communicate with devices outside its own subnet. The default gateway is the router address that a device refers to when accessing other networks outside its own network. When this information is missing, packets do not know where to be sent and are lost.
+                 </div>
+
+                 <div class="image-gallery">
+                     <div class="image-item" onclick="openModal('images/problem_5/problem_5_pc1_ip_settings.png')">
+                         <img src="images/problem_5/problem_5_pc1_ip_settings.png" alt="PC1 IP Settings">
+                         <div class="image-overlay">
+                             <h4>PC1: 192.168.1.2/24, Gateway: 192.168.1.1 (Correct)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_5/problem_5_pc2_ip_settings_default_gateway_empty.png')">
+                         <img src="images/problem_5/problem_5_pc2_ip_settings_default_gateway_empty.png" alt="PC2 Gateway Missing">
+                         <div class="image-overlay">
+                             <h4>PC2: 192.168.2.2/24, Gateway: Empty (Problem)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_5/problem_5_router_giga0:0_settings.png')">
+                         <img src="images/problem_5/problem_5_router_giga0:0_settings.png" alt="Router Interface 1">
+                         <div class="image-overlay">
+                             <h4>Router Interface Giga0/0: 192.168.1.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_5/problem_5_router_giga0:1_settings.png')">
+                         <img src="images/problem_5/problem_5_router_giga0:1_settings.png" alt="Router Interface 2">
+                         <div class="image-overlay">
+                             <h4>Router Interface Giga0/1: 192.168.2.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_5/problem_5_request_timed_out.png')">
+                         <img src="images/problem_5/problem_5_request_timed_out.png" alt="Ping Failed">
+                         <div class="image-overlay">
+                             <h4>Ping fails: Request timed out due to missing gateway</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_5/problem_5_pc2_gateway_fixed.png')">
+                         <img src="images/problem_5/problem_5_pc2_gateway_fixed.png" alt="PC2 Gateway Fixed">
+                         <div class="image-overlay">
+                             <h4>PC2 Gateway fixed: 192.168.2.1 configured</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_5/problem_5_ping_succesful_after_fixfing_gateway.png')">
+                         <img src="images/problem_5/problem_5_ping_succesful_after_fixfing_gateway.png" alt="Ping Success">
+                         <div class="image-overlay">
+                             <h4>Ping successful after fixing gateway configuration</h4>
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="solution">
+                     <div class="solution-title">
+                         <i class="fas fa-lightbulb"></i>
+                         Solution
+                     </div>
+                     <p><strong>Configure Default Gateway:</strong> PC2 must be configured with the correct Default Gateway address (192.168.2.1 - the router's interface on PC2's side). Once configured:</p>
+                     <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                         <li>PC2 correctly forwards packets to the router</li>
+                         <li>Router forwards packets to the other network</li>
+                         <li>Ping operation completes successfully</li>
+                         <li>Inter-VLAN routing works properly</li>
+                     </ul>
+                     <p><strong>Technical Note:</strong> This is a Network Layer (L3) issue. IP routing fails because the exit point (router IP) is not defined for routing decisions.</p>
+                     <a href="cisco/problem_5_gateway.pkt" class="download-link" download>
+                         <i class="fas fa-download"></i>
+                         Download Simulation
+                     </a>
+                 </div>
+             </section>
+
+             <!-- Problem 6: DNS Server Unreachable -->
+             <section id="problem-6" class="problem fade-in">
+                 <div class="problem-header">
+                     <div class="problem-number">6</div>
+                     <h2 class="problem-title">DNS Server Unreachable</h2>
+                     <span class="layer-badge">Application Layer (L7)</span>
+                 </div>
+                 
+                 <div class="problem-description">
+                     <strong>Description:</strong> When a user wants to access a website and types the domain name (www.gokay.com) in the address bar, the page does not open. However, if access can be provided with the IP address, this indicates that there is no problem in the network layers; but the domain name cannot be translated to an IP address. This occurs due to the inability to access the DNS (Domain Name System) server and is considered an Application Layer (Layer 7) problem.
+                 </div>
+
+                 <div class="problem-description">
+                     <strong>Common Causes:</strong>
+                     <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                         <li>Client device's DNS address may be incorrectly defined</li>
+                         <li>DNS server is not configured or the service is not active</li>
+                         <li>DNS record (domain name → IP mapping) is missing</li>
+                         <li>No connection between server and client</li>
+                     </ul>
+                 </div>
+
+                 <div class="image-gallery">
+                     <div class="image-item" onclick="openModal('images/problem_6/problem_6_server_configuration_ip.png')">
+                         <img src="images/problem_6/problem_6_server_configuration_ip.png" alt="Server IP Configuration">
+                         <div class="image-overlay">
+                             <h4>Server IP Configuration: 192.168.1.1 configured</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_6/problem_6_dns_configuration.png')">
+                         <img src="images/problem_6/problem_6_dns_configuration.png" alt="DNS Server Configuration">
+                         <div class="image-overlay">
+                             <h4>DNS Service Configuration: www.gokay.com → 192.168.1.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_6/problem_6_pc0_ip_configuration_wrong_dns_configuration.png')">
+                         <img src="images/problem_6/problem_6_pc0_ip_configuration_wrong_dns_configuration.png" alt="PC0 Wrong DNS Config">
+                         <div class="image-overlay">
+                             <h4>PC0: Wrong DNS server address configured (Problem)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_6/problem_6_wwwgokaycom_host_name_unresolved_due_to_wrong_dns.png')">
+                         <img src="images/problem_6/problem_6_wwwgokaycom_host_name_unresolved_due_to_wrong_dns.png" alt="DNS Resolution Failed">
+                         <div class="image-overlay">
+                             <h4>www.gokay.com: Host name unresolved due to wrong DNS</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_6/problem_6_pc0_dns_fixed.png')">
+                         <img src="images/problem_6/problem_6_pc0_dns_fixed.png" alt="PC0 DNS Fixed">
+                         <div class="image-overlay">
+                             <h4>PC0: DNS server address corrected to 192.168.1.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_6/problem_6_wwwgokaycom_accesed_after_fixing_pc0_dns.png')">
+                         <img src="images/problem_6/problem_6_wwwgokaycom_accesed_after_fixing_pc0_dns.png" alt="DNS Resolution Success">
+                         <div class="image-overlay">
+                             <h4>Success: www.gokay.com accessed after fixing PC0 DNS</h4>
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="solution">
+                     <div class="solution-title">
+                         <i class="fas fa-lightbulb"></i>
+                         Solution
+                     </div>
+                     <p><strong>To solve the problem, the following basic points should be checked:</strong></p>
+                     <ol style="margin: 1rem 0; padding-left: 1.5rem;">
+                         <li>The client device's DNS address should correctly match the DNS server's IP address</li>
+                         <li>DNS server must be configured and active</li>
+                         <li>A record for the desired domain name (e.g., www.gokay.com → 192.168.1.1) must be created on the DNS server</li>
+                         <li>If HTTP service is active on the server, the website will be accessible after DNS resolution</li>
+                     </ol>
+                     <p><strong>Result:</strong> With proper configurations, when the user enters a domain name, this name is translated to an IP address and the page opens successfully.</p>
+                     <a href="cisco/problem_6_dns.pkt" class="download-link" download>
+                         <i class="fas fa-download"></i>
+                         Download Simulation
+                     </a>
+                 </div>
+             </section>
+
+             <!-- Problem 7: IP Routing Missing -->
+             <section id="problem-7" class="problem fade-in">
+                 <div class="problem-header">
+                     <div class="problem-number">7</div>
+                     <h2 class="problem-title">IP Routing Missing</h2>
+                     <span class="layer-badge">Network Layer (L3)</span>
+                 </div>
+                 
+                 <div class="problem-description">
+                     <strong>Description:</strong> Two computers not on the same local network (in different subnets) cannot communicate when they ping each other. Although each computer works successfully on its own network, when it sends a packet to a computer from another network, it receives "Destination Host Unreachable" or "Request Timed Out" error. This situation usually occurs when routing is not done between routers. Even if routers have established connections, data packets cannot be transmitted if inter-network route instructions are not made.
+                 </div>
+
+                 <div class="problem-description">
+                     <strong>Example Network Structure:</strong>
+                     <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                         <li><strong>PC0:</strong> 192.168.1.2/24 — connected router: Router0</li>
+                         <li><strong>PC1:</strong> 192.168.2.2/24 — connected router: Router1</li>
+                         <li><strong>Inter-router link:</strong> 10.0.0.0/24 network between Router0 ↔ Router1</li>
+                         <li><strong>Problem:</strong> Routers connected, IPs assigned but routing not configured</li>
+                     </ul>
+                 </div>
+
+                 <div class="image-gallery">
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_pc0_ip_config.png')">
+                         <img src="images/problem_7/problem_7_pc0_ip_config.png" alt="PC0 IP Configuration">
+                         <div class="image-overlay">
+                             <h4>PC0: 192.168.1.2/24 - Gateway: 192.168.1.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_pc1_ip_config.png')">
+                         <img src="images/problem_7/problem_7_pc1_ip_config.png" alt="PC1 IP Configuration">
+                         <div class="image-overlay">
+                             <h4>PC1: 192.168.2.2/24 - Gateway: 192.168.2.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_router0_giga0_config.png')">
+                         <img src="images/problem_7/problem_7_router0_giga0_config.png" alt="Router0 Giga0 Config">
+                         <div class="image-overlay">
+                             <h4>Router0 Giga0/0: 192.168.1.1 (PC0 side)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_router0_giga1_config.png')">
+                         <img src="images/problem_7/problem_7_router0_giga1_config.png" alt="Router0 Giga1 Config">
+                         <div class="image-overlay">
+                             <h4>Router0 Giga0/1: 10.0.0.1 (Inter-router link)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_router1_giga0_config.png')">
+                         <img src="images/problem_7/problem_7_router1_giga0_config.png" alt="Router1 Giga0 Config">
+                         <div class="image-overlay">
+                             <h4>Router1 Giga0/0: 10.0.0.2 (Inter-router link)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_router1_giga1_config.png')">
+                         <img src="images/problem_7/problem_7_router1_giga1_config.png" alt="Router1 Giga1 Config">
+                         <div class="image-overlay">
+                             <h4>Router1 Giga0/1: 192.168.2.1 (PC1 side)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_ping_from_pc0_to_pc1_host_unreachable_error.png')">
+                         <img src="images/problem_7/problem_7_ping_from_pc0_to_pc1_host_unreachable_error.png" alt="Ping Failed">
+                         <div class="image-overlay">
+                             <h4>PC0 → PC1: Destination Host Unreachable (No Routing)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_router0_ip_configuration_through_cli.png')">
+                         <img src="images/problem_7/problem_7_router0_ip_configuration_through_cli.png" alt="Router0 CLI Config">
+                         <div class="image-overlay">
+                             <h4>Router0 CLI: Static route to 192.168.2.0 via 10.0.0.2</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_router1_ip_configuration_through_cli.png')">
+                         <img src="images/problem_7/problem_7_router1_ip_configuration_through_cli.png" alt="Router1 CLI Config">
+                         <div class="image-overlay">
+                             <h4>Router1 CLI: Static route to 192.168.1.0 via 10.0.0.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_7/problem_7_ping_from_pc0_to_pc1_succesful_after_router_ip_configuration.png')">
+                         <img src="images/problem_7/problem_7_ping_from_pc0_to_pc1_succesful_after_router_ip_configuration.png" alt="Ping Success">
+                         <div class="image-overlay">
+                             <h4>Success: PC0 → PC1 ping successful after routing config</h4>
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="solution">
+                     <div class="solution-title">
+                         <i class="fas fa-lightbulb"></i>
+                         Solution
+                     </div>
+                     <p><strong>Static routing configuration should be applied to both routers to define routes to opposite networks:</strong></p>
+                     
+                     <div style="background: rgba(var(--primary-color-rgb, 37, 99, 235), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem;">Router0 Configuration:</h4>
+                         <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block;">
+                             ip route 192.168.2.0 255.255.255.0 10.0.0.2
+                         </code>
+                         <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">
+                             "To reach 192.168.2.0 network, use 10.0.0.2 (Router1) as next hop"
+                         </p>
+                     </div>
+
+                     <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem;">Router1 Configuration:</h4>
+                         <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block;">
+                             ip route 192.168.1.0 255.255.255.0 10.0.0.1
+                         </code>
+                         <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">
+                             "To reach 192.168.1.0 network, use 10.0.0.1 (Router0) as next hop"
+                         </p>
+                     </div>
+
+                     <p><strong>Result:</strong> After routing definitions are made, PC0 can ping PC1, two different networks communicate smoothly, and data packets find the correct route through IP routing.</p>
+                     
+                     <a href="cisco/problem_7_ip_routing.pkt" class="download-link" download>
+                         <i class="fas fa-download"></i>
+                         Download Simulation
+                     </a>
+                 </div>
+             </section>
+
+             <!-- Problem 8: DHCP Gateway Misconfiguration -->
+             <section id="problem-8" class="problem fade-in">
+                 <div class="problem-header">
+                     <div class="problem-number">8</div>
+                     <h2 class="problem-title">DHCP Gateway Misconfiguration</h2>
+                     <span class="layer-badge">Network Layer (L3)</span>
+                 </div>
+                 
+                 <div class="problem-description">
+                     <strong>Description:</strong> Client devices on the network (e.g., PC0 and PC1) automatically obtain their IP addresses via DHCP. However, when they try to access the internet or other networks, they receive "Request Timed Out" errors. Although IP addresses appear correct, connection cannot be established. This occurs when the Default Gateway in the DHCP server configuration is incorrectly entered.
+                 </div>
+
+                 <div class="problem-description">
+                     <strong>Technical Cause:</strong> In the DHCP Pool configuration, an incorrect Default Gateway was configured (e.g., 192.168.10.1 - a non-existent address). Clients receive:
+                     <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                         <li><strong>IP Address:</strong> 192.168.1.x ✅</li>
+                         <li><strong>Subnet Mask:</strong> 255.255.255.0 ✅</li>
+                         <li><strong>Default Gateway:</strong> 192.168.10.1 ❌ (Unreachable IP!)</li>
+                     </ul>
+                     <p>Therefore, clients can only access their own subnet but cannot reach the router and internet connection.</p>
+                 </div>
+
+                 <div class="image-gallery">
+                     <div class="image-item" onclick="openModal('images/problem_8/problem_8_server_fastethernet_static_ip_configuration.png')">
+                         <img src="images/problem_8/problem_8_server_fastethernet_static_ip_configuration.png" alt="Server Static IP Config">
+                         <div class="image-overlay">
+                             <h4>Server FastEthernet: Static IP 192.168.1.1 configured</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_8/problem_8_server_dhcp_configuration_Pool1.png')">
+                         <img src="images/problem_8/problem_8_server_dhcp_configuration_Pool1.png" alt="DHCP Wrong Gateway Config">
+                         <div class="image-overlay">
+                             <h4>DHCP Pool1: Wrong Default Gateway 192.168.10.1 (Problem)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_8/problem_8_pc0_dhcp_selected_auto_ip_address.png')">
+                         <img src="images/problem_8/problem_8_pc0_dhcp_selected_auto_ip_address.png" alt="PC0 DHCP Config">
+                         <div class="image-overlay">
+                             <h4>PC0: DHCP selected, receiving automatic IP address</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_8/problem_8_pc1_dhcp_selected_auto_ip_address.png')">
+                         <img src="images/problem_8/problem_8_pc1_dhcp_selected_auto_ip_address.png" alt="PC1 DHCP Config">
+                         <div class="image-overlay">
+                             <h4>PC1: DHCP selected, receiving automatic IP address</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_8/problem_8_pc0_ping_192168101_timed_out.png')">
+                         <img src="images/problem_8/problem_8_pc0_ping_192168101_timed_out.png" alt="Ping Failed Wrong Gateway">
+                         <div class="image-overlay">
+                             <h4>PC0: Ping to 192.168.10.1 timed out (Wrong gateway)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_8/problem_8_server_pool1_default_gateway_fixed.png')">
+                         <img src="images/problem_8/problem_8_server_pool1_default_gateway_fixed.png" alt="DHCP Gateway Fixed">
+                         <div class="image-overlay">
+                             <h4>DHCP Pool1: Default Gateway corrected to 192.168.1.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_8/problem_8_pc0_ping_19216811_succesful.png')">
+                         <img src="images/problem_8/problem_8_pc0_ping_19216811_succesful.png" alt="Ping Success">
+                         <div class="image-overlay">
+                             <h4>Success: PC0 ping to 192.168.1.1 successful after fix</h4>
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="solution">
+                     <div class="solution-title">
+                         <i class="fas fa-lightbulb"></i>
+                         Solution Steps
+                     </div>
+                     
+                     <div style="background: rgba(var(--danger-color-rgb, 239, 68, 68), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem; color: var(--danger-color);">1. DHCP Server Configuration Fix:</h4>
+                         <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                             <li>Go to Server0 → Services → DHCP section</li>
+                             <li>Check the existing Pool (e.g., Pool1) Default Gateway value</li>
+                             <li>Change incorrect IP (192.168.10.1) to correct gateway: <strong>192.168.1.1</strong></li>
+                             <li>Save settings with Save button</li>
+                         </ul>
+                     </div>
+
+                     <div style="background: rgba(var(--primary-color-rgb, 37, 99, 235), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem;">2. Client IP Renewal:</h4>
+                         <p>On PC0 or PC1 → Desktop → Command Prompt, enter these commands:</p>
+                         <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block; margin: 0.5rem 0;">
+                             ipconfig /release<br>
+                             ipconfig /renew
+                         </code>
+                         <p style="font-size: 0.9rem; opacity: 0.8;">
+                             These commands make the client release current IP and obtain new (correct gateway) DHCP configuration.
+                         </p>
+                     </div>
+
+                     <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem;">3. Connection Test:</h4>
+                         <p>After receiving new IP information, ping the router:</p>
+                         <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block; margin: 0.5rem 0;">
+                             ping 192.168.1.1
+                         </code>
+                         <p style="font-size: 0.9rem; opacity: 0.8;">
+                             ✅ Now you will receive successful response instead of "Request Timed Out" error.
+                         </p>
+                     </div>
+
+                     <p><strong>Result:</strong> This problem is caused by the incorrect Default Gateway address distributed from the DHCP server to clients. When the gateway address is correctly updated and clients renew their IP information, the connection problem is resolved.</p>
+                     
+                     <a href="cisco/problem_8_gateway.pkt" class="download-link" download>
+                         <i class="fas fa-download"></i>
+                         Download Simulation
+                     </a>
+                 </div>
+             </section>
+
+             <!-- Problem 9: Switching Loop (STP Disabled) -->
+             <section id="problem-9" class="problem fade-in">
+                 <div class="problem-header">
+                     <div class="problem-number">9</div>
+                     <h2 class="problem-title">Switching Loop (STP Disabled)</h2>
+                     <span class="layer-badge">Data Link Layer (L2)</span>
+                 </div>
+                 
+                 <div class="problem-description">
+                     <strong>Description:</strong> At Layer 2 (Data Link Layer) level, when multiple switches are connected with redundant links, a switching loop can occur. This situation is especially seen when Spanning Tree Protocol (STP) is disabled or not configured. Switching loops cause problems such as broadcast storms (unlimited multiplying broadcast packets), slowing network traffic, and disconnection of communication between devices.
+                 </div>
+
+                 <div class="problem-description">
+                     <strong>Network Scenario:</strong> In Cisco Packet Tracer, this scenario was set up:
+                     <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                         <li><strong>Topology:</strong> 3 Switches (Switch0, Switch1, Switch2) connected in triangular formation</li>
+                         <li><strong>Endpoints:</strong> 2 PCs (PC0 and PC1) at the edge points</li>
+                         <li><strong>Normal operation:</strong> One connection being orange (blocking) shows STP preventing loops</li>
+                         <li><strong>Problem:</strong> When STP is disabled, all connections become active and network loop begins</li>
+                     </ul>
+                 </div>
+
+                 <div class="image-gallery">
+                     <div class="image-item" onclick="openModal('images/problem_9/problem_9_pc0_ip_config.png')">
+                         <img src="images/problem_9/problem_9_pc0_ip_config.png" alt="PC0 IP Configuration">
+                         <div class="image-overlay">
+                             <h4>PC0: 192.168.1.2/24 - Gateway: 192.168.1.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_9/problem_9_pc1_ip_config.png')">
+                         <img src="images/problem_9/problem_9_pc1_ip_config.png" alt="PC1 IP Configuration">
+                         <div class="image-overlay">
+                             <h4>PC1: 192.168.1.3/24 - Gateway: 192.168.1.1</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_9/problem_9_switch_STP_disabled.png')">
+                         <img src="images/problem_9/problem_9_switch_STP_disabled.png" alt="STP Disabled">
+                         <div class="image-overlay">
+                             <h4>Switch: STP disabled - All ports active (Loop created)</h4>
+                         </div>
+                     </div>
+                     <div class="video-item" data-video="images/problem_9/problem_9_pc0_ping_timed_out_and_for_very_long_time.mov" onclick="openModal('images/problem_9/problem_9_pc0_ping_timed_out_and_for_very_long_time.mov')">
+                         <div class="video-placeholder">
+                             <i class="fas fa-play-circle"></i>
+                             <h4>Switching Loop Demo</h4>
+                             <p>PC0 ping timeout due to switching loop</p>
+                         </div>
+                         <div class="image-overlay">
+                             <h4>🎥 Video: PC0 ping timed out for very long time (Loop effect)</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_9/problem_9_switch_STD_enabled_with_commands.png')">
+                         <img src="images/problem_9/problem_9_switch_STD_enabled_with_commands.png" alt="STP Enabled Commands">
+                         <div class="image-overlay">
+                             <h4>Switch CLI: STP enabled with spanning-tree vlan 1 command</h4>
+                         </div>
+                     </div>
+                     <div class="image-item" onclick="openModal('images/problem_9/problem_9_pc0_ping_to_pc1_succesful_after_STP_enabled.png')">
+                         <img src="images/problem_9/problem_9_pc0_ping_to_pc1_succesful_after_STP_enabled.png" alt="Ping Success">
+                         <div class="image-overlay">
+                             <h4>Success: PC0 to PC1 ping successful after STP enabled</h4>
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="solution">
+                     <div class="solution-title">
+                         <i class="fas fa-lightbulb"></i>
+                         Solution: Enable Spanning Tree Protocol
+                     </div>
+                     
+                     <div style="background: rgba(var(--danger-color-rgb, 239, 68, 68), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem; color: var(--danger-color);">⚠️ Observed Symptoms:</h4>
+                         <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                             <li>Ping requests in the network are delayed or unreachable</li>
+                             <li>Connection between PCs occasionally drops</li>
+                             <li>Unexpected slowdowns in network traffic</li>
+                             <li>Broadcast storm effects</li>
+                         </ul>
+                     </div>
+
+                     <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem;">🔧 STP Configuration Steps:</h4>
+                         <p>Access each switch via CLI (command line) and enter:</p>
+                         <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block; margin: 0.5rem 0;">
+                             Switch> enable<br>
+                             Switch# configure terminal<br>
+                             Switch(config)# spanning-tree vlan 1
+                         </code>
+                         <p style="font-size: 0.9rem; opacity: 0.8;">
+                             This command manually enables STP on VLAN 1. When STP is active, one of the ports that could create a loop goes into blocking (orange) mode and prevents the loop.
+                         </p>
+                     </div>
+
+                     <p><strong>Result:</strong> Spanning Tree Protocol (STP) provides network security and continuity at Layer 2 level. If STP is enabled, loops are automatically prevented in topologies created with multiple connections. If STP is disabled, switching loops can occur and this causes serious performance and security issues in real networks.</p>
+                     
+                     <a href="cisco/problem_9_STP.pkt" class="download-link" download>
+                         <i class="fas fa-download"></i>
+                         Download Simulation
+                     </a>
+                 </div>
+             </section>
+
+             <!-- Problem 10: MTU Mismatch -->
+             <section id="problem-10" class="problem fade-in">
+                 <div class="problem-header">
+                     <div class="problem-number">10</div>
+                     <h2 class="problem-title">MTU Mismatch (Maximum Transmission Unit)</h2>
+                     <span class="layer-badge">Data Link (L2) + Network Layer (L3)</span>
+                 </div>
+                 
+                 <div class="problem-description">
+                     <strong>Description:</strong> Different MTU (Maximum Transmission Unit) values are configured between two routers or between a PC and router in the network. This causes fragmentation or complete communication failure when large data packets are transmitted.
+                 </div>
+
+                 <div class="problem-description">
+                     <strong>Example Scenario:</strong>
+                     <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                         <li><strong>Router A interface MTU:</strong> 1500 bytes</li>
+                         <li><strong>Router B interface MTU:</strong> 1400 bytes</li>
+                         <li><strong>Problem:</strong> If a device sends large packets with Don't Fragment (DF) bit set, packets cannot reach the destination</li>
+                     </ul>
+                 </div>
+
+                 <div style="background: rgba(var(--warning-color-rgb, 245, 158, 11), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                     <h4 style="margin-bottom: 0.5rem; color: var(--warning-color);"><i class="fas fa-eye"></i> How to Observe the Problem:</h4>
+                     <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                         <li>Ping command may work, but connection fails with large packets</li>
+                         <li>Testing with <code style="background: var(--dark-bg); color: #00ff00; padding: 0.2rem; border-radius: 4px;">ping -l 1472 -f 192.168.1.1</code> returns "Packet needs to be fragmented but DF set" error</li>
+                     </ul>
+                 </div>
+
+                 <div style="background: rgba(var(--primary-color-rgb, 37, 99, 235), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                     <h4 style="margin-bottom: 0.5rem; color: var(--primary-color);"><i class="fas fa-globe"></i> Real-World Examples:</h4>
+                     <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                         <li>VPN tunnels</li>
+                         <li>MPLS or GRE tunnels</li>
+                         <li>ISP routing MTU limitations (e.g., 1492 or 1472)</li>
+                     </ul>
+                 </div>
+
+                 <div class="solution">
+                     <div class="solution-title">
+                         <i class="fas fa-lightbulb"></i>
+                         Solution Options
+                     </div>
+                     
+                     <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem;">🔧 Option 1: MTU Synchronization</h4>
+                         <p>Set the same MTU value (e.g., 1400) on all relevant interfaces:</p>
+                         <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block; margin: 0.5rem 0;">
+                             Router(config)# interface GigabitEthernet0/0<br>
+                             Router(config-if)# mtu 1400
+                         </code>
+                     </div>
+
+                     <div style="background: rgba(var(--danger-color-rgb, 239, 68, 68), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem;">⚠️ Option 2: Disable Path MTU Discovery (Not Recommended)</h4>
+                         <p>Allow the device to fragment large packets (not secure, not recommended):</p>
+                         <code style="background: var(--dark-bg); color: #ff6b6b; padding: 0.5rem; border-radius: 4px; display: block; margin: 0.5rem 0;">
+                             ping -l 1472 -f 192.168.1.1  ❌ (DF bit set)<br>
+                             ping -l 1472 192.168.1.1     ✅ (Fragmentation allowed)
+                         </code>
+                     </div>
+
+                     <div style="background: rgba(var(--success-color-rgb, 16, 185, 129), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <h4 style="margin-bottom: 0.5rem;">🔧 Option 3: TCP MSS (Maximum Segment Size) Adjustment</h4>
+                         <p>Inform TCP-connecting devices about maximum segment size via router:</p>
+                         <code style="background: var(--dark-bg); color: #00ff00; padding: 0.5rem; border-radius: 4px; display: block; margin: 0.5rem 0;">
+                             Router(config)# interface Gig0/0<br>
+                             Router(config-if)# ip tcp adjust-mss 1360
+                         </code>
+                     </div>
+
+                     <p><strong>Result:</strong> MTU mismatch can cause data loss especially during L2 (frame) and L3 (packet) transitions. It's not noticeable with small packets like ping, but network problems occur during large data transmissions. Therefore, MTU values need to be carefully configured in tunnel structures or service provider transitions.</p>
+                     
+                     <div style="background: rgba(var(--primary-color-rgb, 37, 99, 235), 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                         <p><strong>Note:</strong> This problem demonstrates the interaction between Layer 2 (Data Link - frame size limits) and Layer 3 (Network - packet fragmentation) of the OSI model.</p>
+                     </div>
+                 </div>
+             </section>
+         </div>
+     </main>
+
+         <!-- Modal -->
+     <div class="modal" id="imageModal">
+         <div class="modal-content">
+             <button class="modal-close" onclick="closeModal()">
+                 <i class="fas fa-times"></i>
+             </button>
+             <button class="modal-nav prev" onclick="prevImage()">
+                 <i class="fas fa-chevron-left"></i>
+             </button>
+             <button class="modal-nav next" onclick="nextImage()">
+                 <i class="fas fa-chevron-right"></i>
+             </button>
+             <div class="modal-image-container" id="modalImageContainer">
+                 <img id="modalImage" src="" alt="" style="display: block;">
+             </div>
+             <video id="modalVideo" controls style="display: none; max-width: 100%; max-height: 85%; border-radius: 8px;">
+                 Your browser does not support the video tag.
+             </video>
+             <div class="modal-counter" id="modalCounter">
+                 <span id="modalCounterText"></span>
+             </div>
+             <div class="modal-zoom-controls" id="modalZoomControls">
+                 <button class="zoom-btn" id="zoomOut" title="Zoom Out">
+                     <i class="fas fa-search-minus"></i>
+                 </button>
+                 <span class="zoom-level" id="zoomLevel">100%</span>
+                 <button class="zoom-btn" id="zoomIn" title="Zoom In">
+                     <i class="fas fa-search-plus"></i>
+                 </button>
+                 <button class="zoom-btn" id="zoomReset" title="Reset Zoom">
+                     <i class="fas fa-compress-alt"></i>
+                 </button>
+             </div>
+             <div class="modal-caption" id="modalCaption">
+                 <i class="fas fa-info-circle"></i>
+                 <span id="modalCaptionText"></span>
+             </div>
+         </div>
+     </div>
+
+    <script>
+
+        // Smooth scroll and active nav item
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Smooth scroll to section
+                const targetId = item.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                
+                // Close nav on mobile
+                if (window.innerWidth <= 1024) {
+                    document.querySelector('.nav').classList.remove('active');
+                }
+            });
+        });
+
+        // Progress Bar
+        function updateProgress() {
+            const problems = document.querySelectorAll('.problem');
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrolled = (window.scrollY / documentHeight) * 100;
+            
+            document.getElementById('progressFill').style.width = Math.min(scrolled, 100) + '%';
+        }
+
+        window.addEventListener('scroll', updateProgress);
+
+                 // Modal Management
+         let currentImageIndex = 0;
+         let currentProblemImages = [];
+         let currentProblemCaptions = [];
+         let currentZoom = 1;
+         let panX = 0;
+         let panY = 0;
+         let isDragging = false;
+         let lastMouseX = 0;
+         let lastMouseY = 0;
+
+         function updateModalCaption() {
+             const captionElement = document.getElementById('modalCaptionText');
+             const captionContainer = document.getElementById('modalCaption');
+             const counterElement = document.getElementById('modalCounterText');
+             
+             // Update counter
+             if (counterElement && currentProblemImages.length > 0) {
+                 counterElement.textContent = `${currentImageIndex + 1}/${currentProblemImages.length}`;
+             }
+             
+             // Update caption
+             if (captionElement && currentProblemCaptions && typeof currentImageIndex !== 'undefined' && currentImageIndex >= 0) {
+                 const captionText = currentProblemCaptions[currentImageIndex];
+                 if (captionText && captionText.trim()) {
+                     captionElement.textContent = captionText;
+                     if (captionContainer) {
+                         captionContainer.style.display = 'flex';
+                         captionContainer.style.opacity = '1';
+                         captionContainer.style.visibility = 'visible';
+                     }
+                 } else {
+                     if (captionContainer) {
+                         captionContainer.style.display = 'none';
+                     }
+                 }
+             }
+         }
+
+         function updateZoomLevel() {
+             const zoomLevelElement = document.getElementById('zoomLevel');
+             if (zoomLevelElement) {
+                 zoomLevelElement.textContent = Math.round(currentZoom * 100) + '%';
+             }
+         }
+
+         function applyZoom() {
+             const modalImage = document.getElementById('modalImage');
+             if (modalImage) {
+                 modalImage.style.transform = `scale(${currentZoom}) translate(${panX}px, ${panY}px)`;
+             }
+             updateZoomLevel();
+         }
+
+         function resetZoom() {
+             currentZoom = 1;
+             panX = 0;
+             panY = 0;
+             applyZoom();
+         }
+
+         function zoomIn() {
+             currentZoom = Math.min(currentZoom * 1.3, 5);
+             applyZoom();
+         }
+
+         function zoomOut() {
+             currentZoom = Math.max(currentZoom / 1.3, 0.3);
+             if (currentZoom <= 1) {
+                 panX = 0;
+                 panY = 0;
+             }
+             applyZoom();
+         }
+
+         function openModal(mediaSrc) {
+             // Find which problem section this media belongs to
+             const clickedMediaElement = document.querySelector(`img[src="${mediaSrc}"], video[src="${mediaSrc}"], [data-video="${mediaSrc}"]`);
+             if (!clickedMediaElement) {
+                 console.error('Media element not found for src:', mediaSrc);
+                 return;
+             }
+             
+             const problemSection = clickedMediaElement.closest('.problem');
+             
+             // Collect only media from the same problem section
+             const problemMedia = problemSection.querySelectorAll('.image-item, .video-item');
+             currentProblemImages = [];
+             currentProblemCaptions = [];
+             
+             problemMedia.forEach(item => {
+                 const img = item.querySelector('img');
+                 const videoData = item.getAttribute('data-video');
+                 const overlay = item.querySelector('.image-overlay h4');
+                 
+                 let captionText = '';
+                 
+                 if (img) {
+                     currentProblemImages.push(img.src);
+                     captionText = overlay ? overlay.textContent.trim() : (img.alt || 'Image');
+                 } else if (videoData) {
+                     currentProblemImages.push(videoData);
+                     captionText = overlay ? overlay.textContent.trim() : 'Video content';
+                 }
+                 
+                 currentProblemCaptions.push(captionText);
+             });
+             
+             currentImageIndex = currentProblemImages.indexOf(mediaSrc);
+             
+             // If indexOf returns -1, try to find the index by comparing filenames
+             if (currentImageIndex === -1) {
+                 const mediaFileName = mediaSrc.split('/').pop();
+                 currentImageIndex = currentProblemImages.findIndex(src => src.split('/').pop() === mediaFileName);
+             }
+             
+             // Ensure we have a valid index
+             if (currentImageIndex === -1 && currentProblemImages.length > 0) {
+                 currentImageIndex = 0;
+             }
+             
+             // Check if it's a video or image
+             const isVideo = mediaSrc.includes('.mov') || mediaSrc.includes('.mp4') || mediaSrc.includes('.webm');
+             
+             // Show modal first
+             document.getElementById('imageModal').classList.add('active');
+             document.body.style.overflow = 'hidden';
+             
+             // Reset zoom when opening modal
+             resetZoom();
+             
+             // Set media content and update caption immediately
+             const imageContainer = document.getElementById('modalImageContainer');
+             if (isVideo) {
+                 if (imageContainer) imageContainer.style.display = 'none';
+                 document.getElementById('modalVideo').style.display = 'block';
+                 document.getElementById('modalVideo').src = mediaSrc;
+                 document.getElementById('modalZoomControls').style.display = 'none';
+             } else {
+                 document.getElementById('modalVideo').style.display = 'none';
+                 if (imageContainer) imageContainer.style.display = 'flex';
+                 document.getElementById('modalImage').src = mediaSrc;
+                 document.getElementById('modalZoomControls').style.display = 'flex';
+             }
+             
+             // Update caption immediately
+             updateModalCaption();
+             
+             // Also update after a delay as backup
+             setTimeout(() => {
+                 updateModalCaption();
+             }, 50);
+             
+             // And again after modal transition
+             setTimeout(() => {
+                 updateModalCaption();
+             }, 300);
+         }
+
+         function closeModal() {
+             document.getElementById('imageModal').classList.remove('active');
+             document.body.style.overflow = 'auto';
+         }
+
+         function nextImage() {
+             currentImageIndex = (currentImageIndex + 1) % currentProblemImages.length;
+             showCurrentMedia();
+             updateModalCaption();
+         }
+
+         function prevImage() {
+             currentImageIndex = (currentImageIndex - 1 + currentProblemImages.length) % currentProblemImages.length;
+             showCurrentMedia();
+             updateModalCaption();
+         }
+
+         function showCurrentMedia() {
+             const currentSrc = currentProblemImages[currentImageIndex];
+             const isVideo = currentSrc.includes('.mov') || currentSrc.includes('.mp4') || currentSrc.includes('.webm');
+             
+             // Reset zoom when changing media
+             resetZoom();
+             
+             const imageContainer = document.getElementById('modalImageContainer');
+             if (isVideo) {
+                 if (imageContainer) imageContainer.style.display = 'none';
+                 document.getElementById('modalVideo').style.display = 'block';
+                 document.getElementById('modalVideo').src = currentSrc;
+                 document.getElementById('modalZoomControls').style.display = 'none';
+             } else {
+                 document.getElementById('modalVideo').style.display = 'none';
+                 if (imageContainer) imageContainer.style.display = 'flex';
+                 document.getElementById('modalImage').src = currentSrc;
+                 document.getElementById('modalZoomControls').style.display = 'flex';
+             }
+             
+             // Update caption immediately after media change
+             setTimeout(() => {
+                 updateModalCaption();
+             }, 10);
+         }
+
+        // Keyboard navigation for modal
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('imageModal').classList.contains('active')) {
+                if (e.key === 'Escape') closeModal();
+                if (e.key === 'ArrowRight') nextImage();
+                if (e.key === 'ArrowLeft') prevImage();
+                if (e.key === '+' || e.key === '=') zoomIn();
+                if (e.key === '-') zoomOut();
+                if (e.key === '0') resetZoom();
+            }
+        });
+
+        // Zoom controls event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('zoomIn').addEventListener('click', zoomIn);
+            document.getElementById('zoomOut').addEventListener('click', zoomOut);
+            document.getElementById('zoomReset').addEventListener('click', resetZoom);
+            
+            // Mouse wheel zoom
+            document.getElementById('modalImageContainer').addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            });
+            
+            // Pan functionality
+            const imageContainer = document.getElementById('modalImageContainer');
+            
+            imageContainer.addEventListener('mousedown', (e) => {
+                if (currentZoom > 1) {
+                    isDragging = true;
+                    lastMouseX = e.clientX;
+                    lastMouseY = e.clientY;
+                    imageContainer.style.cursor = 'grabbing';
+                }
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && currentZoom > 1) {
+                    const deltaX = e.clientX - lastMouseX;
+                    const deltaY = e.clientY - lastMouseY;
+                    
+                    panX += deltaX / currentZoom;
+                    panY += deltaY / currentZoom;
+                    
+                    applyZoom();
+                    
+                    lastMouseX = e.clientX;
+                    lastMouseY = e.clientY;
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                imageContainer.style.cursor = currentZoom > 1 ? 'grab' : 'grab';
+            });
+        });
+
+        // Close modal on background click
+        document.getElementById('imageModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeModal();
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = Math.random() * 0.3 + 's';
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all problem sections
+        document.querySelectorAll('.problem').forEach(problem => {
+            observer.observe(problem);
+        });
+
+        // Auto-update active nav item based on scroll position
+        window.addEventListener('scroll', () => {
+            const problems = document.querySelectorAll('.problem');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            let current = '';
+            problems.forEach(problem => {
+                const rect = problem.getBoundingClientRect();
+                if (rect.top <= 150 && rect.bottom >= 150) {
+                    current = problem.id;
+                }
+            });
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.fade-in').forEach((element, index) => {
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
